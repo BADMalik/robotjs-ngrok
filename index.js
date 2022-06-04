@@ -1,10 +1,9 @@
-// var robot = require("robotjs");
+var robot = require("robotjs");
 const path = require('path');
 
 const express = require('express')
 const app = express();
 var cors = require('cors')
-    // "robotjs": "^0.6.0"
 app.use(cors({origin: 'http://localhost:3000'}));
 // Speed up the mouse.
 // var http = require('http');
