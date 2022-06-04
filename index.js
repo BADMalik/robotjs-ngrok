@@ -1,4 +1,4 @@
-var robot = require("robotjs");
+// var robot = require("robotjs");
 const path = require('path');
 
 const express = require('express')
@@ -26,17 +26,17 @@ app.get('/', (req, res) => {
     // to the API (e.g. in case you use sessions)
     res.setHeader('Access-Control-Allow-Credentials', true);
     // res.send('aaa')
-    robot.setMouseDelay(3);
-// // // var twoPI = Math.PI * 2.0;   
-    var screenSize = robot.getScreenSize();
-    var height = (screenSize.height);
-    var width = screenSize.width;
+//     robot.setMouseDelay(3);
+// // // // var twoPI = Math.PI * 2.0;   
+//     var screenSize = robot.getScreenSize();
+//     var height = (screenSize.height);
+//     var width = screenSize.width;
 // //     var x = 10000;
-    robot.moveMouse(width/2,height);
-    robot.moveMouseSmooth(width/2.5,( height/2.5),.001);
-    robot.mouseClick();
-    robot.moveMouseSmooth(width/1.6,( height/1.5),.001);
-    robot.mouseClick();
+    // robot.moveMouse(width/2,height);
+    // robot.moveMouseSmooth(width/2.5,( height/2.5),.001);
+    // robot.mouseClick();
+    // robot.moveMouseSmooth(width/1.6,( height/1.5),.001);
+    // robot.mouseClick();
     res.send(true)
     return 0;
     //     res.send('')
