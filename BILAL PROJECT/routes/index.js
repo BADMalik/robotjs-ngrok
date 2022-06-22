@@ -1,86 +1,34 @@
-var express = require("express");
-var router = express.Router();
-const axios = require("axios");
-var WordPOS = require('wordpos');
-let wordpos = new WordPOS();
+// ./src/index.js
+// importing the dependencies
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+// const helmet = require("helmet");
+const morgan = require("morgan");
 
+// defining the Express app
+const app = express();
+// defining an array to work as the database (temporary solution)
+const ads = [{ title: "Hello, world (again)!" }];
 
-const result = async (place_id, max_words, sort_param) => {
-  const key = "AIzaSyC2wX5xFwPhmQxChCoFD7kwxYaY9gN9NMc";
-  // const { place_id, max_words, sort_param } = req.body;
+// adding Helmet to enhance your Rest API's security
+// app.use(helmet());
 
-  let photos = [];
-  let rating = []
-  try {
-    if (!place_id) throw 'Error';
-    const adArr = [];
+// using bodyParser to parse JSON bodies into JS objects
+app.use(bodyParser.json());
 
-    const { data } = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${key}`
-    );
-    data.result.reviews.forEach((review) => {
-      let x = wordpos.getAdjectives(review.text, (result) => {
-      });
-      adArr.push(x)
-    })
+// enabling CORS for all requests
+app.use(cors());
 
-    let resp = await Promise.all(adArr);
-    resp = [...new Set([].concat(...resp))]
+// adding morgan to log HTTP requests
+app.use(morgan("combined"));
 
-    if (max_words) {
-      resp = resp.splice(0, max_words * data.result.reviews.length);
-    }
-    if (sort_param === 'alpha') {
-      resp = resp.sort()
-    }
+// defining an endpoint to return all ads
+app.get("/", (req, res) => {
+  res.send(ads);
+});
 
-    rating = data.result.reviews.map((ratingObj) => ratingObj.rating);
-    photos = data.result.photos.map((photoObj) => photoObj.photo_reference)
-
-    res.status(200).send({ rating, photos, resp });
-  } catch (err) {
-    res.status(404).send(err);
-  }
-}  
-await result('ChlJw2mPuVEP9YgRszkcSv4TPms', 2, 'alpha')
-
-
-// router.post("/restaurants", async (req, res, next) => {
-//   const key = "AIzaSyC2wX5xFwPhmQxChCoFD7kwxYaY9gN9NMc";
-//   const { place_id, max_words, sort_param } = req.body;
-
-//   let photos = [];
-//   let rating = []
-//   try {
-//     if (!place_id) throw 'Error';
-//     const adArr = [];
-
-//     const { data } = await axios.get(
-//       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${key}`
-//     );
-//     data.result.reviews.forEach((review) => {
-//       let x = wordpos.getAdjectives(review.text, (result) => {
-//       });
-//       adArr.push(x)
-//     })
-
-//     let resp = await Promise.all(adArr);
-//     resp = [...new Set([].concat(...resp))]
-
-//     if (max_words) {
-//       resp = resp.splice(0, max_words * data.result.reviews.length);
-//     }
-//     if (sort_param === 'alpha') {
-//       resp = resp.sort()
-//     }
-
-//     rating = data.result.reviews.map((ratingObj) => ratingObj.rating);
-//     photos = data.result.photos.map((photoObj) => photoObj.photo_reference)
-
-//     res.status(200).send({ rating, photos, resp });
-//   } catch (err) {
-//     res.status(404).send(err);
-//   }
-// });
-
-// module.exports = router;
+// starting the server
+app.listen(3000, () => {
+  console.log("listening on port 3001");
+});
