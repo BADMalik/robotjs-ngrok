@@ -4,61 +4,23 @@
   <body>
     <button id="start">Start</button>
     <button id="stop">Stop</button>
-    <!-- <button id="webstart">WEB Start</button>
-    <button id="webstop">WEB Stop</button> -->
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> -->
-    <!-- <script src="http://localhost:3000/jquery.min.js"></script>
-     -->
      <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script>
-        
+      console.log(window.location.origin);
       let start = document.getElementById("start"),
         stop = document.getElementById("stop"),
-        // webStart = document.getElementById("webstart"),
-        // webStop = document.getElementById("webstop"),
         mediaRecorder;
 
       start.addEventListener("click", async () => {
         
-            let stream = recordScreen();
-            let request = $.ajax({
-                url: 'http://localhost:3000/',
-                type: "GET",
-                cors:false,
-                headers: {
-                    "Access-Control-Allow-Headers": "*", // this will allow all CORS requests
-                    "Access-Control-Allow-Methods": 'OPTIONS,POST,GET', // this states the allowed methods
-                    "Content-Type": "application/json" // this shows the expected content type
-                },
-            });
-
-            request.fail(function (jqXHR, textStatus, errorThrown){
-                console.log(
-                    "The following error occurred: "+
-                    textStatus, errorThrown
-                );
-            });
-
-            request.done(function (data, textStatus, jqXHR){
-                if(data.data == null || data.data == "null") {
-                    console.log(data)
-                }
-            });
+            let stream = await recordScreen();
+            
             let mimeType = "video/webm";
             mediaRecorder = createRecorder(stream, mimeType);
             let node = document.createElement("p");
             node.textContent = "Started recording";
             document.body.appendChild(node);
         });
-    //   webStart.addEventListener("click", async () => {
-    //     let stream = await webCam();
-    //     let mimeType = "video/mp4";
-    //     mediaRecorder = createRecorder(stream, mimeType);
-    //     let node = document.createElement("p");
-    //     node.textContent = "Started recording";
-    //     document.body.appendChild(node);
-    //   });
 
       stop.addEventListener("click", () => {
         mediaRecorder.stop();
@@ -66,27 +28,40 @@
         node.textContent = "Stopped recording";
         document.body.appendChild(node);
       });
-
-    //   webStop.addEventListener("click", () => {
-    //     mediaRecorder.stop();
-    //     let node = document.createElement("p");
-    //     node.textContent = "Stopped recording";
-    //     document.body.appendChild(node);
-    //   });
-
       recordScreen = async () => {
-        return await navigator.mediaDevices.getDisplayMedia({
-          audio: true,
-          video: { mediaSource: "screen" },
-        });
-      };
+        return new Promise((resolve, reject) => {
+          let request = $.ajax({
+                url: window.location.origin,
+                type: "GET",
+                cors:false,
+                headers: {
+                    "Access-Control-Allow-Headers": "*", // this will allow all CORS requests
+                    "Access-Control-Allow-Methods": 'OPTIONS,POST,GET', // this states the allowed methods
+                    "Content-Type": "application/json" // this shows the expected content type
+                },
+          });
 
-    //   webCam = async () => {
-    //     return await navigator.mediaDevices.getUserMedia({
-    //       audio: true,
-    //       video: true,
-    //     });
-    //   };
+          request.fail(function (jqXHR, textStatus, errorThrown){
+              console.log(
+                  "The following error occurred: "+
+                  textStatus, errorThrown
+              );
+              reject(errorThrown);
+          });
+            
+            request.done(function (data, textStatus, jqXHR){
+                if(data.data == null || data.data == "null") {
+                    console.log(data)
+                }});
+                
+                resolve(
+                  navigator.mediaDevices.getDisplayMedia({
+                    audio: true,
+                    video: { mediaSource: "screen" },
+                  })
+                );
+            });
+      };
 
       createRecorder = (stream, mimeType) => {
         let recordedChunks = [];
