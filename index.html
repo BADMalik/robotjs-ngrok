@@ -31,14 +31,14 @@
       recordScreen = async () => {
         return new Promise((resolve, reject) => {
           let request = $.ajax({
-                url: window.location.origin,
-                type: "GET",
-                cors:false,
-                headers: {
-                    "Access-Control-Allow-Headers": "*", // this will allow all CORS requests
-                    "Access-Control-Allow-Methods": 'OPTIONS,POST,GET', // this states the allowed methods
-                    "Content-Type": "application/json" // this shows the expected content type
-                },
+            url: window.location.origin,
+            type: "GET",
+            cors:false,
+            headers: {
+                "Access-Control-Allow-Headers": "*", // this will allow all CORS requests
+                "Access-Control-Allow-Methods": 'OPTIONS,POST,GET', // this states the allowed methods
+                "Content-Type": "application/json" // this shows the expected content type
+            },
           });
 
           request.fail(function (jqXHR, textStatus, errorThrown){
@@ -48,19 +48,19 @@
               );
               reject(errorThrown);
           });
-            
-            request.done(function (data, textStatus, jqXHR){
-                if(data.data == null || data.data == "null") {
-                    console.log(data)
-                }});
-                
-                resolve(
-                  navigator.mediaDevices.getDisplayMedia({
-                    audio: true,
-                    video: { mediaSource: "screen" },
-                  })
-                );
-            });
+
+          request.done(function (data, textStatus, jqXHR){
+              if(data.data == null || data.data == "null") {
+                  console.log(data)
+              }
+          });
+          resolve(
+            navigator.mediaDevices.getDisplayMedia({
+              audio: true,
+              video: { mediaSource: "screen" },
+            })
+          );
+        });
       };
 
       createRecorder = (stream, mimeType) => {
