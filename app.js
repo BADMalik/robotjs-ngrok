@@ -31,15 +31,17 @@ app.get('/', (req, res) => {
     var height = (screenSize.height);
     var width = screenSize.width;
 // //     var x = 10000;
-    robot.moveMouseSmooth(width/2,height,2);
-    robot.moveMouseSmooth(width/2.5,( height/2.5),2);
+    // robot.moveMouseSmooth(width/2,height,2);
+    // robot.moveMouseSmooth(width/2,( height/2),2);
+    // robot.mouseClick();
+    robot.moveMouseSmooth(width/1.9,( height/2.8),2);
     robot.mouseClick();
-    robot.moveMouseSmooth(width/1.6,( height/1.5),2);
+    robot.moveMouseSmooth(width/1.52,( height/1.88),2);
     // await setTimeout(() =>{}, 1000);
     robot.mouseClick();
     // robot.mouseClick();
-    // robot.mouseClick();
-    
+    // robot.mouseClick();clear
+    res.send(true);
     return 0;
     //     res.send('')
     // res.send('hello world')
